@@ -1,3 +1,4 @@
+# :nodoc:
 :provisioning:
   :service: apps
 
@@ -41,3 +42,17 @@
       :method: :put
       :path: ":path_user:/:username:"
       :format: GoogleAppsApi::UserEntity
+
+    :retrieve_customerid:
+      :method: :get
+      :path: ":feed:/a/feeds/customer/2.0/customerId"
+
+    :retrieve_all_orgunits:
+      :method: :get
+      :path: ":feed:/a/feeds/orgunit/2.0/:customerid:?get=all"
+      :feed: true
+      :format: GoogleAppsApi::OrgUnitEntity
+
+    :move_user_to_orgunit:
+      :method: :put
+      :path: ":feed:/a/feeds/orgunit/2.0/:customerid:/:orgunit:"

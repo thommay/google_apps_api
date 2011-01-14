@@ -29,7 +29,7 @@ module GoogleAppsApi
 
     def login(username, domain, password, service)
       @gsession_id = nil
-      request_body = '&Email='+CGI.escape(username + "@" + domain)+'&Passwd='+CGI.escape(password)+'&accountType=HOSTED&service='+ service + '&source=columbiaUniversity-google_apps_api-0.1'
+      request_body = '&Email='+CGI.escape(username + "@" + domain)+'&Passwd='+CGI.escape(password)+'&accountType=HOSTED&service='+ service + '&source=apps'
       res = request(:domain_login, :headers =>  {'Content-Type'=>'application/x-www-form-urlencoded'}, :body => request_body)
 
 
@@ -43,7 +43,6 @@ module GoogleAppsApi
       options = {:headers => @headers}.merge(options)
       options[:headers] = (options[:headers] || {}).merge(options.delete(:merge_headers) || {})
       action_hash = @actions_hash[action] || raise("invalid action #{action} called")
-      
       subs_hash = @actions_subs.merge(options)
       subs_hash.each { |k,v| subs_hash[k] = action_gsub(v, subs_hash) if v.kind_of?(String)}
       

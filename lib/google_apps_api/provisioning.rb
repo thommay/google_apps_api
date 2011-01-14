@@ -45,7 +45,32 @@ module GoogleAppsApi #:nodoc:
         request(:create_user, options.merge(:body => res.strip))
       end
 
-      
+      def move_user_to_orgunit(orgunitname, username, *args)
+        options = args.extract_options!
+        #username like user@domain
+        res = <<-DESCXML
+        <?xml version="1.0" encoding="UTF-8"?>
+        <atom:entry xmlns:atom="http://www.w3.org/2005/Atom"
+        xmlns:apps="http://schemas.google.com/apps/2006">
+        <apps:property name="parentOrgUnitPath" value="#{orgunitname}" />
+        <apps:property name="usersToMove" value="#{username}" />
+        </atom:entry>
+        
+        DESCXML
+        
+        request(:move_user_to_orgunit, options.merge(:orgunit => orgunitname, :customerid => retrieve_customerid, :debug => true, :body => res.strip))
+      end
+
+      def retrieve_customerid(*args)
+        options = args.extract_options!
+        @customerid ||= request(:retrieve_customerid, options).at_css('entry>id').inner_text.sub("https://apps-apis.google.com/a/feeds/customer/2.0/","")
+      end      
+
+      def retrieve_all_orgunits(*args)
+        options = args.extract_options!.merge(:customerid => retrieve_customerid)
+        request(:retrieve_all_orgunits, options) #.at_css('entry>id').inner_text.sub("https://apps-apis.google.com/a/feeds/customer/2.0/","")
+      end      
+    
       def update_user(username, *args)
         options = args.extract_options!      
         options.each { |k,v| options[k] = escapeXML(v)}
@@ -76,7 +101,7 @@ module GoogleAppsApi #:nodoc:
 
 
   class UserEntity < Entity
-    attr_accessor :given_name, :family_name, :username, :suspended, :ip_whitelisted, :admin, :change_password_at_next_login, :agreed_to_terms, :quota_limit, :domain
+    attr_accessor :given_name, :family_name, :username, :suspended, :ip_whitelisted, :admin, :change_password_at_next_login, :agreed_to_terms, :quota_limit, :domain, :id
 
     def initialize(*args)
       options = args.extract_options!
@@ -114,5 +139,25 @@ module GoogleAppsApi #:nodoc:
     def get_calendars(c_api, *args)
       c_api.retrieve_calendars_for_user(self, *args)
     end
+  end
+
+  class OrgUnitEntity < Entity
+    attr_accessor :name, :orgunitpath
+
+    def initialize(*args)
+      options = args.extract_options!
+      if (_xml = options[:xml])
+        xml = _xml.at_css("entry") || _xml
+         xml.css("apps|property").each do |x|
+           if x.attribute("name").to_s == "name"
+             @name = x.attribute("value").to_s
+           end
+           if x.attribute("name").to_s == "orgUnitPath"
+             @orgunitpath = x.attribute("value").to_s
+           end
+         end
+      end
+    end
+    
   end
 end
