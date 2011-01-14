@@ -54,7 +54,7 @@ module GoogleAppsApi #:nodoc:
         xmlns:apps="http://schemas.google.com/apps/2006">
         <apps:property name="name" value="#{orgunitname}" />
         <apps:property name="description" value="#{orgunitname}" />
-        <apps:property name="parentOrgUnitPath" value="#{orgunitname}" />
+        <apps:property name="parentOrgUnitPath" value="" />
         <apps:property name="usersToMove" value="#{username}" />
         </atom:entry>
         
