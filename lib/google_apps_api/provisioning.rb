@@ -96,6 +96,23 @@ module GoogleAppsApi #:nodoc:
         request(:delete_user, options)
       end
 
+      def update_password(username, *args)
+        options = args.extract_options!      
+        options.each { |k,v| options[k] = escapeXML(v)}
+
+        res = <<-DESCXML
+        <?xml version="1.0" encoding="UTF-8"?>
+        <atom:entry xmlns:atom="http://www.w3.org/2005/Atom"
+        xmlns:apps="http://schemas.google.com/apps/2006">
+        <atom:category scheme="http://schemas.google.com/g/2005#kind"
+        term="http://schemas.google.com/apps/2006#user"/>
+        <apps:login password="#{options[:password]}" hashFunctionName="#{options[:hash_name]}"/>
+        </atom:entry>
+
+        DESCXML
+        request(:update_user, options.merge(:username => username, :body => res.strip))
+      end
+                                                                                                            
 
     end
 
