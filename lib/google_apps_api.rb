@@ -1,7 +1,6 @@
-require 'httpclient'
-require 'cgi'
 require 'nokogiri'
 require "active_support"
+require 'gdata'
 
 require "load_config"
 require "google_apps_api/base_api"
