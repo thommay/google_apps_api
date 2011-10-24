@@ -44,11 +44,15 @@ module GoogleAppsApi
         puts "---\n"
       end
 
-      response = case method
-      when :delete, :get
-       @client.send(method, path)
-      else
-       @client.send(method, path, options[:body])
+      begin
+        response = case method
+         when :delete, :get
+           @client.send(method, path)
+         else
+           @client.send(method, path, options[:body])
+         end
+      rescue GData::Client::BadRequestError => e
+        test_errors(Nokogiri::XML(e.response.body) { |c| c.strict.noent })
       end
 
       if format == :text
