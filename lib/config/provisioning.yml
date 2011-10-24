@@ -75,4 +75,5 @@
     :retrieve_all_groups:
       :method: :get
       :path: ":path_group:"
+      :feed: true
       :format: GoogleAppsApi::GroupEntity
