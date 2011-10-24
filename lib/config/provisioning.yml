@@ -71,3 +71,8 @@
     :delete_group:
       :method: :delete
       :path: ":path_group:/:groupid:"
+
+    :retrieve_all_groups:
+      :method: :get
+      :path: ":path_group:"
+      :format: GoogleAppsApi::GroupEntity
