@@ -133,6 +133,11 @@ module GoogleAppsApi #:nodoc:
         DESCXML
         request(:create_group, options.merge(:body => res.strip))
       end
+
+      def delete_group(groupid, *args)
+        options = args.extract_options!.merge(:groupid => groupid)
+        request(:delete_group, options)
+      end
     end
 
   end
