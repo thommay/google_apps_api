@@ -7,6 +7,7 @@
     :auth: https://www.google.com
     :feed: https://apps-apis.google.com
     :path_user: ":feed:/a/feeds/:domain:/user/2.0"    
+    :path_group: ":feed:/a/feeds/group/2.0/:domain:"    
     
   :action_hash:
     :domain_login:
@@ -56,3 +57,17 @@
     :move_user_to_orgunit:
       :method: :put
       :path: ":feed:/a/feeds/orgunit/2.0/:customerid:/:orgunit:"
+
+    :create_group:
+      :method: :post
+      :path: ":path_group:"
+      :format: GoogleAppsApi::GroupEntity
+
+    :update_group:
+      :method: :put
+      :path: ":path_group:/:groupid:"
+      :format: GoogleAppsApi::GroupEntity
+
+    :delete_group:
+      :method: :delete
+      :path: ":path_group:/:groupid:"
