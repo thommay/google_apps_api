@@ -114,6 +114,25 @@ module GoogleAppsApi #:nodoc:
       end
                                                                                                             
 
+      def create_group(groupid, *args)
+        options = args.extract_options!      
+        options.each { |k,v| options[k] = escapeXML(v)}
+
+        perms = options[:permission] || "Member"
+
+        res = <<-DESCXML
+        <?xml version="1.0" encoding="UTF-8"?>
+        <atom:entry xmlns:atom="http://www.w3.org/2005/Atom"
+        xmlns:apps="http://schemas.google.com/apps/2006">
+        <apps:property name="groupId" value="#{escapeXML(groupid)}"></apps:property>
+        <apps:property name="groupName" value="#{options[:name]}"></apps:property>
+        <apps:property name="description" value="#{options[:description]}"></apps:property>
+        <apps:property name="emailPermission" value="#{perms}"></apps:property>
+        </atom:entry>
+
+        DESCXML
+        request(:create_group, options.merge(:body => res.strip))
+      end
     end
 
   end
