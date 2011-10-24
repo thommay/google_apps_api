@@ -114,6 +114,55 @@ module GoogleAppsApi #:nodoc:
       end
                                                                                                             
 
+      def create_group(groupid, *args)
+        options = args.extract_options!      
+        options.each { |k,v| options[k] = escapeXML(v)}
+
+        perms = options[:permission] || "Admin"
+
+        res = <<-DESCXML
+        <?xml version="1.0" encoding="UTF-8"?>
+        <atom:entry xmlns:atom="http://www.w3.org/2005/Atom"
+        xmlns:apps="http://schemas.google.com/apps/2006">
+        <apps:property name="groupId" value="#{escapeXML(groupid)}"></apps:property>
+        <apps:property name="groupName" value="#{options[:name]}"></apps:property>
+        <apps:property name="description" value="#{options[:description]}"></apps:property>
+        <apps:property name="emailPermission" value="#{perms}"></apps:property>
+        </atom:entry>
+
+        DESCXML
+        request(:create_group, options.merge(:groupid => groupid, :body => res.strip))
+      end
+
+      def retrieve_all_groups(*args)
+        options = args.extract_options!
+        request(:retrieve_all_groups, options)
+      end
+
+
+      def update_group(groupid, *args)
+        options = args.extract_options!      
+        options.each { |k,v| options[k] = escapeXML(v)}
+
+        perms = options[:permission] || "Admin"
+
+        res = <<-DESCXML
+        <?xml version="1.0" encoding="UTF-8"?>
+        <atom:entry xmlns:atom="http://www.w3.org/2005/Atom"
+        xmlns:apps="http://schemas.google.com/apps/2006">
+        <apps:property name="groupId" value="#{escapeXML(groupid)}"></apps:property>
+        <apps:property name="groupName" value="#{options[:name]}"></apps:property>
+        <apps:property name="description" value="#{options[:description]}"></apps:property>
+        <apps:property name="emailPermission" value="#{perms}"></apps:property>
+        </atom:entry>
+        DESCXML
+        request(:update_group, options.merge(:body => res.strip))
+      end
+
+      def delete_group(groupid, *args)
+        options = args.extract_options!.merge(:groupid => groupid)
+        request(:delete_group, options)
+      end
     end
 
   end
@@ -179,4 +228,39 @@ module GoogleAppsApi #:nodoc:
     end
     
   end
+
+  # <atom:entry>
+  #     <id>https://apps-apis.google.com/a/feeds/group/2.0/example.com/us-sales%40example.com</id>
+  #     <atom:updated>2008-12-03T16:33:05.261Z</atom:updated>
+  #     <atom:link href="https://apps-apis.google.com/a/feeds/group/2.0/example.com/us-sales%40example.com" type="application/atom+xml" rel="self"></atom:link>
+  #     <atom:link href="https://apps-apis.google.com/a/feeds/group/2.0/example.com/us-sales%40example.com" type="application/atom+xml" rel="edit"></atom:link>
+  #     <apps:property name="groupId" value="us-sales@example.com"></apps:property>
+  #     <apps:property name="groupName" value="US Sales"></apps:property>
+  #     <apps:property name="emailPermission" value="Anyone"></apps:property>
+  #     <apps:property name="description" value="United States Sales Team"></apps:property>
+  # </atom:entry>
+  class GroupEntity < Entity
+    attr_accessor :id, :name, :permission, :description
+
+    def initialize(*args)
+      options = args.extract_options!
+      if (_xml = options[:xml])
+        xml = _xml.at_css("entry") || _xml
+        xml.css("apps|property").each do |x|
+          case x.attribute("name").to_s
+          when "groupId"
+            @id = x.attribute("value").to_s
+          when "groupName"
+            @name = x.attribute("value").to_s
+          when "emailPermission"
+            @permission = x.attribute("value").to_s
+          when "description"
+            @description = x.attribute("value").to_s
+          end
+        end
+      end
+    end
+
+  end
+
 end
