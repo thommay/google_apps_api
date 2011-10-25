@@ -242,16 +242,6 @@ module GoogleAppsApi #:nodoc:
     
   end
 
-  # <atom:entry>
-  #     <id>https://apps-apis.google.com/a/feeds/group/2.0/example.com/us-sales%40example.com</id>
-  #     <atom:updated>2008-12-03T16:33:05.261Z</atom:updated>
-  #     <atom:link href="https://apps-apis.google.com/a/feeds/group/2.0/example.com/us-sales%40example.com" type="application/atom+xml" rel="self"></atom:link>
-  #     <atom:link href="https://apps-apis.google.com/a/feeds/group/2.0/example.com/us-sales%40example.com" type="application/atom+xml" rel="edit"></atom:link>
-  #     <apps:property name="groupId" value="us-sales@example.com"></apps:property>
-  #     <apps:property name="groupName" value="US Sales"></apps:property>
-  #     <apps:property name="emailPermission" value="Anyone"></apps:property>
-  #     <apps:property name="description" value="United States Sales Team"></apps:property>
-  # </atom:entry>
   class GroupEntity < Entity
     attr_accessor :id, :name, :permission, :description
 
