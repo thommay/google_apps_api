@@ -176,6 +176,17 @@ module GoogleAppsApi #:nodoc:
         DESCXML
         request(:add_user_to_group, options.merge(:groupid => groupid, :body => res.strip))
       end
+
+      def retrieve_group_members(groupid, *args)
+        options = args.extract_options!
+        request(:retrieve_group_members, options.merge(:groupid => groupid, :body => res.strip))
+      end
+
+      def retrieve_group_member(groupid, memberid, *args)
+        options = args.extract_options!
+        request(:retrieve_group_member, options.merge(:groupid => groupid, :memberid => memberid, :body => res.strip))
+      end
+
     end
 
   end
