@@ -163,6 +163,19 @@ module GoogleAppsApi #:nodoc:
         options = args.extract_options!.merge(:groupid => groupid)
         request(:delete_group, options)
       end
+
+      def add_user_to_group(groupid, userid, *args)
+        options = args.extract_options!
+
+        res = <<-DESCXML
+        <?xml version="1.0" encoding="UTF-8"?>
+        <atom:entry xmlns:atom="http://www.w3.org/2005/Atom"
+        xmlns:apps="http://schemas.google.com/apps/2006">
+        <apps:property name="memberId" value="#{escapeXML(userid)}"/>
+        </atom:entry>
+        DESCXML
+        request(:add_user_to_group, options.merge(:groupid => groupid, :body => res.strip))
+      end
     end
 
   end
