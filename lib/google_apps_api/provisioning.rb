@@ -179,12 +179,17 @@ module GoogleAppsApi #:nodoc:
 
       def retrieve_group_members(groupid, *args)
         options = args.extract_options!
-        request(:retrieve_group_members, options.merge(:groupid => groupid, :body => res.strip))
+        request(:retrieve_group_members, options.merge(:groupid => groupid))
       end
 
       def retrieve_group_member(groupid, memberid, *args)
         options = args.extract_options!
-        request(:retrieve_group_member, options.merge(:groupid => groupid, :memberid => memberid, :body => res.strip))
+        request(:retrieve_group_member, options.merge(:groupid => groupid, :memberid => memberid))
+      end
+
+      def remove_user_from_group(groupid, memberid, *args)
+        options = args.extract_options!
+        request(:remove_user_from_group, options.merge(:groupid => groupid, :memberid => memberid))
       end
 
     end

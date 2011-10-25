@@ -83,6 +83,10 @@
       :path: ":path_group:/:groupid:/member"
       :format: GoogleAppsApi::GroupMemberEntity
 
+    :remove_user_from_group:
+      :method: :delete
+      :path: ":path_group:/:groupid:/member/:memberid:"
+
     :retrieve_group_members:
       :method: :get
       :path: ":path_group:/:groupid:/member"
