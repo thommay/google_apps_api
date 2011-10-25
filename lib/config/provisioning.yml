@@ -81,3 +81,19 @@
     :add_user_to_group:
       :method: :post
       :path: ":path_group:/:groupid:/member"
+      :format: GoogleAppsApi::GroupMemberEntity
+
+    :remove_user_from_group:
+      :method: :delete
+      :path: ":path_group:/:groupid:/member/:memberid:"
+
+    :retrieve_group_members:
+      :method: :get
+      :path: ":path_group:/:groupid:/member"
+      :feed: true
+      :format: GoogleAppsApi::GroupMemberEntity
+
+    :retrieve_group_member:
+      :method: :get
+      :path: ":path_group:/:groupid:/member/:memberid:"
+      :format: GoogleAppsApi::GroupMemberEntity

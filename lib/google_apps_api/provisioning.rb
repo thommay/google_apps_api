@@ -176,6 +176,22 @@ module GoogleAppsApi #:nodoc:
         DESCXML
         request(:add_user_to_group, options.merge(:groupid => groupid, :body => res.strip))
       end
+
+      def retrieve_group_members(groupid, *args)
+        options = args.extract_options!
+        request(:retrieve_group_members, options.merge(:groupid => groupid))
+      end
+
+      def retrieve_group_member(groupid, memberid, *args)
+        options = args.extract_options!
+        request(:retrieve_group_member, options.merge(:groupid => groupid, :memberid => memberid))
+      end
+
+      def remove_user_from_group(groupid, memberid, *args)
+        options = args.extract_options!
+        request(:remove_user_from_group, options.merge(:groupid => groupid, :memberid => memberid))
+      end
+
     end
 
   end
@@ -242,16 +258,6 @@ module GoogleAppsApi #:nodoc:
     
   end
 
-  # <atom:entry>
-  #     <id>https://apps-apis.google.com/a/feeds/group/2.0/example.com/us-sales%40example.com</id>
-  #     <atom:updated>2008-12-03T16:33:05.261Z</atom:updated>
-  #     <atom:link href="https://apps-apis.google.com/a/feeds/group/2.0/example.com/us-sales%40example.com" type="application/atom+xml" rel="self"></atom:link>
-  #     <atom:link href="https://apps-apis.google.com/a/feeds/group/2.0/example.com/us-sales%40example.com" type="application/atom+xml" rel="edit"></atom:link>
-  #     <apps:property name="groupId" value="us-sales@example.com"></apps:property>
-  #     <apps:property name="groupName" value="US Sales"></apps:property>
-  #     <apps:property name="emailPermission" value="Anyone"></apps:property>
-  #     <apps:property name="description" value="United States Sales Team"></apps:property>
-  # </atom:entry>
   class GroupEntity < Entity
     attr_accessor :id, :name, :permission, :description
 
@@ -269,6 +275,28 @@ module GoogleAppsApi #:nodoc:
             @permission = x.attribute("value").to_s
           when "description"
             @description = x.attribute("value").to_s
+          end
+        end
+      end
+    end
+
+  end
+
+  class GroupMemberEntity < Entity
+    attr_accessor :id, :type, :direct
+
+    def initialize(*args)
+      options = args.extract_options!
+      if (_xml = options[:xml])
+        xml = _xml.at_css("entry") || _xml
+        xml.css("apps|property").each do |x|
+          case x.attribute("name").to_s
+          when "memberId"
+            @id = x.attribute("value").to_s
+          when "memberType"
+            @type = x.attribute("value").to_s
+          when "directMember"
+            @direct = x.attribute("value")
           end
         end
       end
