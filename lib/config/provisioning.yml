@@ -75,4 +75,9 @@
     :retrieve_all_groups:
       :method: :get
       :path: ":path_group:"
+      :feed: true
       :format: GoogleAppsApi::GroupEntity
+
+    :add_user_to_group:
+      :method: :post
+      :path: ":path_group:/:groupid:/member"
