@@ -139,6 +139,11 @@ module GoogleAppsApi #:nodoc:
         request(:retrieve_all_groups, options)
       end
 
+      def retrieve_groups_for_user(memberid, *args)
+        options = args.extract_options!
+        direct = options.has_key?(:direct) ? options[:direct] : false
+        request(:retrieve_groups_for_user, options.merge(:memberid => memberid, :direct => direct))
+      end
 
       def update_group(groupid, *args)
         options = args.extract_options!      

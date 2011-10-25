@@ -78,6 +78,12 @@
       :feed: true
       :format: GoogleAppsApi::GroupEntity
 
+    :retrieve_groups_for_user:
+      :method: :get
+      :path: ":path_group:/?member=:memberid:&directOnly=:direct:"
+      :feed: true
+      :format: GoogleAppsApi::GroupEntity
+
     :add_user_to_group:
       :method: :post
       :path: ":path_group:/:groupid:/member"
