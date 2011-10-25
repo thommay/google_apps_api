@@ -296,7 +296,7 @@ module GoogleAppsApi #:nodoc:
           when "memberType"
             @type = x.attribute("value").to_s
           when "directMember"
-            @direct = x.attribute("value")
+            @direct = x.attribute("value").to_s
           end
         end
       end
