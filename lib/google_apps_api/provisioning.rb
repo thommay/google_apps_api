@@ -266,4 +266,26 @@ module GoogleAppsApi #:nodoc:
 
   end
 
+  class GroupMemberEntity < Entity
+    attr_accessor :id, :type, :direct
+
+    def initialize(*args)
+      options = args.extract_options!
+      if (_xml = options[:xml])
+        xml = _xml.at_css("entry") || _xml
+        xml.css("apps|property").each do |x|
+          case x.attribute("name").to_s
+          when "memberId"
+            @id = x.attribute("value").to_s
+          when "memberType"
+            @type = x.attribute("value").to_s
+          when "directMember"
+            @direct = x.attribute("value")
+          end
+        end
+      end
+    end
+
+  end
+
 end
